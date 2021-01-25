@@ -13,12 +13,12 @@ const postRoute = require('./routes/api/posts');
 //Connect Database
 connectDB();
 
-//Middlewares used as bodyParser
-app.use(express.json());
+//Middle-wares used as bodyParser
+app.use(express.json({ extended: false }));
 
 app.get('/', (req, res) => res.send(`API Running`));
 
-//Routes Middlewares
+//Routes Middle-wares
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/profile', profileRoute);
