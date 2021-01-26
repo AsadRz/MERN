@@ -1,7 +1,11 @@
 const userRoute = require('express').Router();
-// const userController = require('../Controller/userController');
+const userController = require('../Controller/userController');
 
-userRoute.get('/', (req, res) => {
-  res.send('User Route');
-});
+/**
+ *  @route POST api/users
+ *  @desc Register User
+ *  @access Public
+ */
+
+userRoute.post('/', userController.registerUser);
 module.exports = userRoute;
