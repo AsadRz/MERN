@@ -5,9 +5,9 @@ const User = require('../../../../../models/User');
  * Email Exists Service
  * @param {req.body.email} data
  */
-const emailExistsCheck = async (data, res) => {
+const emailExistsCheck = async (email) => {
   // console.log(User.findOne({ email: data }));
-  const user = await User.findOne({ email: data });
+  const user = await User.findOne({ email });
   if (user && user !== null) {
     return user;
   } else {
@@ -26,9 +26,10 @@ const registerUser = async (data) => {
     name: data.name,
     email: data.email,
     password: data.hashedPassword,
+    avatar: data.avatar,
   });
   try {
-    const savedUser = await user.save();
+    await user.save();
     const data = {
       status: 200,
       id: user._id,

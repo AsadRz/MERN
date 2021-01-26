@@ -1,4 +1,5 @@
 const { userValidation } = require('../../../../../Validations/userValidation');
+const gravatar = require('gravatar');
 const {
   emailExistsCheck,
   passwordHashing,
@@ -7,32 +8,45 @@ const {
 
 module.exports = {
   async registerUser(req, res) {
-    /**
-     * Validate User before forwarding
-     */
+    const { name, email, password } = req.body;
 
-    const { error } = userValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    try {
+      /**
+       * Validate User before forwarding
+       */
+      const { error } = userValidation(req.body);
+      if (error) return res.status(400).send(error.details[0].message);
 
-    // Checking if Email already exists
-    const emailExists = await emailExistsCheck(req.body.email);
-    if (emailExists) return res.status(400).send('Email Already Exists');
+      // Checking if Email already exists
+      const emailExists = await emailExistsCheck(email);
+      if (emailExists) return res.status(400).send('Email Already Exists');
 
-    // Hashing the Password
-    const hashedPassword = await passwordHashing(req.body.password);
+      const avatar = gravatar.url(email, {
+        s: '200',
+        r: 'pg',
+        d: 'retro',
+      });
 
-    /**
-     * Creating new User
-     */
-    const data = {
-      name: req.body.name,
-      email: req.body.email,
-      hashedPassword: hashedPassword,
-    };
-    const user = await registerUser(data);
-    if (user)
-      return res
-        .status(201)
-        .send(`User Created Successfully with id: ${user.id}`);
+      // Hashing the Password
+      const hashedPassword = await passwordHashing(password);
+
+      /**
+       * Creating new User
+       */
+      const data = {
+        name: name,
+        email: email,
+        hashedPassword: hashedPassword,
+        avatar,
+      };
+      const user = await registerUser(data);
+      if (user)
+        return res
+          .status(201)
+          .send(`User Created Successfully with id: ${user.id}`);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    }
   },
 };
