@@ -5,7 +5,7 @@ const authRoute = require('./components/auth');
 const profileRoute = require('./components/profile');
 const postRoute = require('./components/posts');
 
-restRouter.use('/auth/login', authRoute);
+restRouter.use('/auth', authRoute);
 restRouter.use('/profile', profileRoute);
 restRouter.use('/posts', postRoute);
 restRouter.use('/users', userRoute);

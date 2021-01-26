@@ -2,9 +2,6 @@ const bcrypt = require('bcryptjs'); //Password Hashing
 const { JsonWebTokenError } = require('jsonwebtoken');
 const User = require('../../../../../models/User');
 
-const config = require('config');
-const jwt = require('jsonwebtoken');
-
 /**
  * Email Exists Service
  * @param {req.body.email} data
