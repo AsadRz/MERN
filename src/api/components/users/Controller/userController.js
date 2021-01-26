@@ -1,5 +1,9 @@
 const { userValidation } = require('../../../../../Validations/userValidation');
-const { passwordHashing, registerUser } = require('../Service/service');
+const {
+  emailExistsCheck,
+  passwordHashing,
+  registerUser,
+} = require('../Service/service');
 
 module.exports = {
   async registerUser(req, res) {
@@ -9,6 +13,10 @@ module.exports = {
 
     const { error } = userValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+
+    // Checking if Email already exists
+    const emailExists = await emailExistsCheck(req.body.email);
+    if (emailExists) return res.status(400).send('Email Already Exists');
 
     // Hashing the Password
     const hashedPassword = await passwordHashing(req.body.password);
