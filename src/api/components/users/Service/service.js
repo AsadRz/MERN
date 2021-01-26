@@ -1,5 +1,9 @@
 const bcrypt = require('bcryptjs'); //Password Hashing
+const { JsonWebTokenError } = require('jsonwebtoken');
 const User = require('../../../../../models/User');
+
+const config = require('config');
+const jwt = require('jsonwebtoken');
 
 /**
  * Email Exists Service
@@ -30,6 +34,7 @@ const registerUser = async (data) => {
   });
   try {
     await user.save();
+
     const data = {
       status: 200,
       id: user._id,

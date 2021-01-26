@@ -6,6 +6,9 @@ const {
   registerUser,
 } = require('../Service/service');
 
+const config = require('config');
+const jwt = require('jsonwebtoken');
+
 module.exports = {
   async registerUser(req, res) {
     const { name, email, password } = req.body;
@@ -40,10 +43,23 @@ module.exports = {
         avatar,
       };
       const user = await registerUser(data);
-      if (user)
-        return res
-          .status(201)
-          .send(`User Created Successfully with id: ${user.id}`);
+      if (user) {
+        const payload = {
+          user: {
+            id: user.id,
+          },
+        };
+
+        jwt.sign(
+          payload,
+          config.get('jwtToken'),
+          { expiresIn: 360000 },
+          (err, token) => {
+            if (err) throw err;
+            res.json({ token });
+          }
+        );
+      }
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
