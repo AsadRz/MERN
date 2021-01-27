@@ -2,6 +2,7 @@ const {
   getCurrentProfile,
   createOrUpdateProfile,
   getUserProfiles,
+  getUserProfile,
 } = require('../services/profileServices');
 const { profileValidation } = require('../Validations/profileValidation');
 
@@ -66,8 +67,22 @@ module.exports = {
   },
 
   async getProfiles(req, res) {
-    const profile = await getUserProfiles();
-    if (!profile) res.status(400).send('Profiles not found');
-    res.json(profile);
+    const profiles = await getUserProfiles();
+    if (!profiles) res.status(400).send('Profiles not found');
+    res.json(profiles);
+  },
+
+  async getCurrentUserProfile(req, res) {
+    try {
+      const profile = await getUserProfile(req.params.user_id);
+      if (!profile) res.status(400).send('Profile not found');
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      if (err.kind === 'ObjectId') {
+        res.status(400).send('Profile not found');
+      }
+      res.status(500).send('Internal Server Error');
+    }
   },
 };

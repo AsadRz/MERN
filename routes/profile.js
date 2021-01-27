@@ -26,4 +26,12 @@ profileRoute.post('/', auth, profileController.createUserProfile);
 
 profileRoute.get('/', profileController.getProfiles);
 
+/**
+ * @route Get /api/profiles/users/:user_id
+ * @desc Get userProfile by user_id
+ * @access Public
+ */
+
+profileRoute.get('/user/:user_id', profileController.getCurrentUserProfile);
+
 module.exports = profileRoute;

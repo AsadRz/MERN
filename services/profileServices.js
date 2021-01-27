@@ -63,6 +63,24 @@ const getUserProfiles = async () => {
   return profiles;
 };
 
+/**
+ * @desc Fetching user profile of current Id
+ */
+
+const getUserProfile = async (id) => {
+  const profile = await Profile.findOne({ user: id }).populate('user', [
+    'name',
+    'avatar',
+  ]);
+
+  if (!profile) return false;
+  return profile;
+
+  console.error(error.message);
+  return false;
+};
+
 module.exports.getCurrentProfile = getCurrentProfile;
 module.exports.createOrUpdateProfile = createOrUpdateProfile;
 module.exports.getUserProfiles = getUserProfiles;
+module.exports.getUserProfile = getUserProfile;
