@@ -34,4 +34,12 @@ profileRoute.get('/', profileController.getProfiles);
 
 profileRoute.get('/user/:user_id', profileController.getCurrentUserProfile);
 
+/**
+ * @route Delete /api/profiles
+ * @desc Delete users, profiles and posts
+ * @access Private
+ */
+
+profileRoute.delete('/', auth, profileController.deleteUserDetails);
+
 module.exports = profileRoute;

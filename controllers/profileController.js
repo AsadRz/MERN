@@ -3,12 +3,13 @@ const {
   createOrUpdateProfile,
   getUserProfiles,
   getUserProfile,
+  deleteDetails,
 } = require('../services/profileServices');
 const { profileValidation } = require('../Validations/profileValidation');
 
 module.exports = {
   async getProfile(req, res) {
-    const profile = await getCurrentProfile(req.user.id);
+    const profile = await getCurrentProfile(req.user._id);
 
     if (!profile) {
       return res.status(400).send('No Profile associated with this user');
@@ -41,7 +42,6 @@ module.exports = {
 
     //Build Project Object
     const profileFields = {};
-
     profileFields.user = req.user._id;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
@@ -82,6 +82,16 @@ module.exports = {
       if (err.kind === 'ObjectId') {
         res.status(400).send('Profile not found');
       }
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async deleteUserDetails(req, res) {
+    try {
+      deleteDetails(req.user._id);
+      res.status(200).send('User Deleted');
+    } catch (err) {
+      console.error(err.message);
       res.status(500).send('Internal Server Error');
     }
   },

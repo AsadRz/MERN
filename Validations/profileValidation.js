@@ -15,6 +15,8 @@ const profileValidation = (data) => {
     facebook: Joi.string(),
     twitter: Joi.string(),
     youtube: Joi.string(),
+    linkedin: Joi.string(),
+    instagram: Joi.string(),
     status: Joi.string().required(),
     skills: Joi.required(),
   });

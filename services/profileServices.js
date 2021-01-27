@@ -80,7 +80,23 @@ const getUserProfile = async (id) => {
   return false;
 };
 
+const deleteDetails = async (id) => {
+  /**
+   * @todo remove user posts
+   */
+  /**
+   * @todo remove profile
+   */
+
+  await Profile.findOneAndRemove({ user: id });
+  /**
+   * @todo remove user posts
+   */
+  await User.findOneAndRemove({ _id: id });
+};
+
 module.exports.getCurrentProfile = getCurrentProfile;
 module.exports.createOrUpdateProfile = createOrUpdateProfile;
 module.exports.getUserProfiles = getUserProfiles;
 module.exports.getUserProfile = getUserProfile;
+module.exports.deleteDetails = deleteDetails;
