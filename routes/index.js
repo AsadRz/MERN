@@ -1,9 +1,9 @@
 const restRouter = require('express').Router();
 //Import Routes
-const userRoute = require('./components/users');
-const authRoute = require('./components/auth');
-const profileRoute = require('./components/profile');
-const postRoute = require('./components/profile');
+const userRoute = require('./users');
+const authRoute = require('./auth');
+const profileRoute = require('./profile');
+const postRoute = require('./posts');
 
 restRouter.use('/auth', authRoute);
 restRouter.use('/profile', profileRoute);

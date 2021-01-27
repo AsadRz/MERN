@@ -1,5 +1,5 @@
 const profileRoute = require('express').Router();
-const profileController = require('../../../controllers/profileController');
+const profileController = require('../controllers/profileController');
 
 profileRoute.get('/', (req, res) => {
   res.send('Profile Route');
