@@ -4,8 +4,8 @@
 // const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { loginValidation } = require('../Validations/userValidation');
-const comparePassword = require('../services/Common/comparePassword');
-const { emailExists } = require('../services/Common/emailExist');
+const comparePassword = require('../utils/comparePassword');
+const { emailExists } = require('../utils/emailExist');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 

@@ -1,6 +1,6 @@
 const { userValidation } = require('../Validations/userValidation');
 const gravatar = require('gravatar');
-const { emailExists } = require('../services/Common/emailExist');
+const { emailExists } = require('../utils/emailExist');
 const { passwordHashing, registerUser } = require('../services/userServices');
 const config = require('config');
 const jwt = require('jsonwebtoken');
