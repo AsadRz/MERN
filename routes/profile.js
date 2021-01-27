@@ -24,4 +24,6 @@ profileRoute.post('/', auth, profileController.createUserProfile);
  * @access Public
  */
 
+profileRoute.get('/', profileController.getProfiles);
+
 module.exports = profileRoute;

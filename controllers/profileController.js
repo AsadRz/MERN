@@ -1,6 +1,7 @@
 const {
   getCurrentProfile,
   createOrUpdateProfile,
+  getUserProfiles,
 } = require('../services/profileServices');
 const { profileValidation } = require('../Validations/profileValidation');
 
@@ -61,6 +62,12 @@ module.exports = {
     // Create or update profile
     const profile = await createOrUpdateProfile(profileFields);
     if (!profile) res.status(500).send('Internal Server Error');
+    res.json(profile);
+  },
+
+  async getProfiles(req, res) {
+    const profile = await getUserProfiles();
+    if (!profile) res.status(400).send('Profiles not found');
     res.json(profile);
   },
 };

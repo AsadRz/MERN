@@ -53,5 +53,16 @@ const createOrUpdateProfile = async (data) => {
   }
 };
 
+/**
+ * @desc Fetching all user Profiles
+ */
+
+const getUserProfiles = async () => {
+  const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+  if (!profiles) return false;
+  return profiles;
+};
+
 module.exports.getCurrentProfile = getCurrentProfile;
 module.exports.createOrUpdateProfile = createOrUpdateProfile;
+module.exports.getUserProfiles = getUserProfiles;
