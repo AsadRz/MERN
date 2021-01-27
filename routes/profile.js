@@ -1,7 +1,21 @@
 const profileRoute = require('express').Router();
 const profileController = require('../controllers/profileController');
+const auth = require('../middleware/auth');
 
-profileRoute.get('/', (req, res) => {
-  res.send('Profile Route');
-});
+/**
+ * @route GET /api/profiles/profile
+ * @desc Get current user profile
+ * @access Private
+ */
+
+profileRoute.get('/profile', auth, profileController.getProfile);
+
+/**
+ * @route POST /api/profiles
+ * @desc Create or update user profile
+ * @access Private
+ */
+
+profileRoute.post('/', auth, profileController.createUserProfile);
+
 module.exports = profileRoute;

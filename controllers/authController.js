@@ -50,7 +50,7 @@ module.exports = {
       },
       config.get('jwtToken'),
       {
-        expiresIn: '360000',
+        expiresIn: '2h',
       }
     );
     res.header('auth-token', token).send(token);

@@ -4,6 +4,7 @@ const db = config.get('mongoURI'); //Getting DB connectionString from string def
 
 const connectDB = async () => {
   try {
+    mongoose.set('useFindAndModify', false); // to use findOneandUpdate() we need to set it to false
     await mongoose.connect(db, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
