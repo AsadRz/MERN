@@ -9,6 +9,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
+      useFindAndModify: false, // to use findOneandUpdate() we need to set it to false
     }); //connect returns promise so we should implement it asynchronously
     console.log(`MongoDB connected`);
   } catch (err) {
