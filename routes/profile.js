@@ -102,7 +102,6 @@ profileRoute.get('/github/:username', async (req, res) => {
       headers: { 'user-agent': 'node.js' },
     };
 
-    let githubRepos = '';
     request(options, (error, response, body) => {
       if (error) {
         console.log(error);

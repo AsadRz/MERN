@@ -15,7 +15,7 @@ const { educationValidation } = require('../Validations/educationValidation');
 
 module.exports = {
   async getProfile(req, res) {
-    const profile = await getCurrentProfile(req.user._id);
+    const profile = await getCurrentProfile(req.user.id);
 
     if (!profile) {
       return res.status(400).send('No Profile associated with this user');
@@ -27,6 +27,7 @@ module.exports = {
     /**
      * Validate Profile before Submitting
      */
+
     const { error } = profileValidation(req.body);
 
     if (error) return res.status(400).send(error.details[0].message);
@@ -48,7 +49,7 @@ module.exports = {
 
     //Build Project Object
     const profileFields = {};
-    profileFields.user = req.user._id;
+    profileFields.user = req.user.id;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
@@ -94,7 +95,7 @@ module.exports = {
 
   async deleteUserDetails(req, res) {
     try {
-      deleteDetails(req.user._id);
+      deleteDetails(req.user.id);
       res.status(200).send('User Deleted');
     } catch (err) {
       console.error(err.message);

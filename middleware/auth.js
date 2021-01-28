@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
 
   try {
     const verified = jwt.verify(token, config.get('jwtToken'));
-    req.user = verified;
+    req.user = verified.user;
     next();
   } catch (err) {
     return res.status(400).send('Invalid Token String');

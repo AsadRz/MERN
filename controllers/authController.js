@@ -12,8 +12,8 @@ const jwt = require('jsonwebtoken');
 module.exports = {
   async getUsers(req, res) {
     try {
-      // console.log('__________ in here _____________', req.user._id);
-      const user = await User.findById(req.user._id).select('-password');
+      // console.log('__________ in here _____________', req.user.id, req.user);
+      const user = await User.findById(req.user.id).select('-password');
       // console.log('______________', user, '____________');
       res.json(user);
     } catch (err) {
