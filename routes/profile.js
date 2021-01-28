@@ -62,4 +62,24 @@ profileRoute.delete(
   profileController.deleteExperience
 );
 
+/**
+ * @route PUT /api/profiles/education
+ * @desc Adding education in profiles
+ * @access Private
+ */
+
+profileRoute.put('/education', auth, profileController.addEducation);
+
+/**
+ * @route DELETE /api/profiles/education/:edu_id
+ * @desc Deleting education in profiles
+ * @access Private
+ */
+
+profileRoute.delete(
+  '/education/:edu_id',
+  auth,
+  profileController.deleteEducation
+);
+
 module.exports = profileRoute;

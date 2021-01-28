@@ -132,6 +132,42 @@ const deleteUserExperience = async (id, expId) => {
   }
 };
 
+const addUserEducation = async (data, id) => {
+  try {
+    const profile = await Profile.findOne({ user: id });
+    profile.education.unshift(data);
+    await profile.save();
+    return profile;
+  } catch (error) {
+    console.error(error.message);
+    return false;
+  }
+};
+
+const deleteUserEducation = async (id, eduId) => {
+  try {
+    const profile = await Profile.findOne({ user: id });
+    //Get Remove Index
+
+    if (!profile) {
+      return false;
+    }
+
+    // console.log('----------- Profile ----------', profile.experience);
+    const removedIndex = profile.education
+      .map((item) => item.id)
+      .indexOf(eduId);
+    // console.log('----------- Removed Index ----------', removedIndex);
+
+    profile.education.splice(removedIndex, 1);
+    await profile.save();
+    return profile;
+  } catch (error) {
+    console.error(error.message);
+    return false;
+  }
+};
+
 module.exports.getCurrentProfile = getCurrentProfile;
 module.exports.createOrUpdateProfile = createOrUpdateProfile;
 module.exports.getUserProfiles = getUserProfiles;
@@ -139,3 +175,5 @@ module.exports.getUserProfile = getUserProfile;
 module.exports.deleteDetails = deleteDetails;
 module.exports.addUserExperience = addUserExperience;
 module.exports.deleteUserExperience = deleteUserExperience;
+module.exports.addUserEducation = addUserEducation;
+module.exports.deleteUserEducation = deleteUserEducation;
