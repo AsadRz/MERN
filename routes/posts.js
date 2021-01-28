@@ -9,4 +9,13 @@ const auth = require('../middleware/auth');
  */
 
 postRouter.post('/', auth, postController.createPost);
+
+/**
+ * @route GET /api/posts
+ * @desc  GET all posts
+ * @access Private
+ */
+
+postRouter.get('/', auth, postController.getPosts);
+
 module.exports = postRouter;

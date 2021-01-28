@@ -9,24 +9,26 @@ const User = require('../models/User');
  */
 
 const getUserandCreatePost = async (id, text) => {
-  try {
-    const user = await User.findById(id).select('-password');
+  const user = await User.findById(id).select('-password');
 
-    const newPost = new Post({
-      text,
-      name: user.name,
-      avatar: user.avatar,
-      user: id,
-    });
+  const newPost = new Post({
+    text,
+    name: user.name,
+    avatar: user.avatar,
+    user: id,
+  });
 
-    const post = await newPost.save();
-    if (!post) {
-      return false;
-    }
-    return post;
-  } catch (err) {
-    console.error(err);
+  const post = await newPost.save();
+  if (!post) {
     return false;
   }
+  return post;
+};
+
+const getAllPosts = async () => {
+  const posts = await Post.find().sort({ date: -1 });
+  if (!posts) return false;
+  return posts;
 };
 module.exports.getUserandCreatePost = getUserandCreatePost;
+module.exports.getAllPosts = getAllPosts;
