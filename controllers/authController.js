@@ -44,15 +44,15 @@ module.exports = {
     /**
      * Authenticating User & Assigning Token
      */
-    const token = jwt.sign(
-      {
-        _id: user._id,
+
+    const payload = {
+      user: {
+        id: user.id,
       },
-      config.get('jwtToken'),
-      {
-        expiresIn: '2h',
-      }
-    );
+    };
+    const token = jwt.sign(payload, config.get('jwtToken'), {
+      expiresIn: '2h',
+    });
     res.header('auth-token', token).send(token);
   },
 };

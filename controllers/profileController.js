@@ -132,7 +132,7 @@ module.exports = {
     };
 
     try {
-      const profile = await addUserExperience(newExp, req.user._id);
+      const profile = await addUserExperience(newExp, req.user.id);
       if (!profile) return res.status(400).send('Profile not found');
 
       return res.send(profile);
@@ -184,7 +184,7 @@ module.exports = {
     };
 
     try {
-      const profile = await addUserEducation(newEdu, req.user._id);
+      const profile = await addUserEducation(newEdu, req.user.id);
       if (!profile) return res.status(400).send('Profile not found');
 
       return res.send(profile);
