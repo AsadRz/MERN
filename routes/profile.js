@@ -1,4 +1,6 @@
 const profileRoute = require('express').Router();
+const request = require('request');
+const config = require('config');
 const profileController = require('../controllers/profileController');
 const auth = require('../middleware/auth');
 
@@ -81,5 +83,41 @@ profileRoute.delete(
   auth,
   profileController.deleteEducation
 );
+
+/**
+ * @route GET /api/profiles/github/:username
+ * @desc Get user repo from github
+ * @access Public
+ */
+
+profileRoute.get('/github/:username', async (req, res) => {
+  try {
+    const options = {
+      uri: `https://api.github.com/users/${
+        req.params.username
+      }/repos?per_page=5&sort=created:asc&client_id=${config.get(
+        'githubClientId'
+      )}&client_secret=${config.get('githubClientSecret')}`,
+      method: 'GET',
+      headers: { 'user-agent': 'node.js' },
+    };
+
+    let githubRepos = '';
+    request(options, (error, response, body) => {
+      if (error) {
+        console.log(error);
+      }
+
+      if (response.statusCode !== 200) {
+        response.status(404).send('No Github Profile Found');
+      }
+
+      res.send(JSON.parse(body));
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 module.exports = profileRoute;
