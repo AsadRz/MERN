@@ -42,4 +42,24 @@ profileRoute.get('/user/:user_id', profileController.getCurrentUserProfile);
 
 profileRoute.delete('/', auth, profileController.deleteUserDetails);
 
+/**
+ * @route PUT /api/profiles/experience
+ * @desc Adding experience in profiles
+ * @access Private
+ */
+
+profileRoute.put('/experience', auth, profileController.addExperience);
+
+/**
+ * @route DELETE /api/profiles/experience/:exp_id
+ * @desc Deleting experience in profiles
+ * @access Private
+ */
+
+profileRoute.delete(
+  '/experience/:exp_id',
+  auth,
+  profileController.deleteExperience
+);
+
 module.exports = profileRoute;

@@ -95,8 +95,47 @@ const deleteDetails = async (id) => {
   await User.findOneAndRemove({ _id: id });
 };
 
+const addUserExperience = async (data, id) => {
+  try {
+    const profile = await Profile.findOne({ user: id });
+    profile.experience.unshift(data);
+    await profile.save();
+    return profile;
+  } catch (error) {
+    console.error(error.message);
+    return false;
+  }
+};
+
+const deleteUserExperience = async (id, expId) => {
+  try {
+    console.log(id);
+    const profile = await Profile.findOne({ user: id });
+    //Get Remove Index
+
+    if (!profile) {
+      return false;
+    }
+
+    // console.log('----------- Profile ----------', profile.experience);
+    const removedIndex = profile.experience
+      .map((item) => item.id)
+      .indexOf(expId);
+    // console.log('----------- Removed Index ----------', removedIndex);
+
+    profile.experience.splice(removedIndex, 1);
+    await profile.save();
+    return profile;
+  } catch (error) {
+    console.error(error.message);
+    return false;
+  }
+};
+
 module.exports.getCurrentProfile = getCurrentProfile;
 module.exports.createOrUpdateProfile = createOrUpdateProfile;
 module.exports.getUserProfiles = getUserProfiles;
 module.exports.getUserProfile = getUserProfile;
 module.exports.deleteDetails = deleteDetails;
+module.exports.addUserExperience = addUserExperience;
+module.exports.deleteUserExperience = deleteUserExperience;

@@ -4,8 +4,11 @@ const {
   getUserProfiles,
   getUserProfile,
   deleteDetails,
+  addUserExperience,
+  deleteUserExperience,
 } = require('../services/profileServices');
 const { profileValidation } = require('../Validations/profileValidation');
+const { experienceValidation } = require('../Validations/experienceValidation');
 
 module.exports = {
   async getProfile(req, res) {
@@ -93,6 +96,58 @@ module.exports = {
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async addExperience(req, res) {
+    /**
+     * Validate Profile before Submitting
+     */
+    const { error } = experienceValidation(req.body);
+
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    } = req.body;
+
+    const newExp = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    };
+
+    try {
+      const profile = await addUserExperience(newExp, req.user._id);
+      if (!profile) return res.status(400).send('Profile not found');
+
+      return res.send(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(400).send('Internal Server Error');
+    }
+  },
+  async deleteExperience(req, res) {
+    try {
+      const profile = await deleteUserExperience(
+        req.user._id,
+        req.params.exp_id
+      );
+      if (!profile) res.status(400).send('Profile Not Found');
+      res.send(profile);
+    } catch (error) {
+      console.error(error.message);
+      res.status(400).send('Internal Server Error');
     }
   },
 };
