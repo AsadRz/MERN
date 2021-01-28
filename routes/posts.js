@@ -18,4 +18,20 @@ postRouter.post('/', auth, postController.createPost);
 
 postRouter.get('/', auth, postController.getPosts);
 
+/**
+ * @route GET /api/posts/:post_id
+ * @desc  GET post by id
+ * @access Private
+ */
+
+postRouter.get('/:post_id', auth, postController.getPost);
+
+/**
+ * @route DELETE /api/posts/:post_id
+ * @desc  Delete post by id
+ * @access Private
+ */
+
+postRouter.delete('/:post_id', auth, postController.deletePost);
+
 module.exports = postRouter;

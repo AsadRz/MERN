@@ -30,5 +30,35 @@ const getAllPosts = async () => {
   if (!posts) return false;
   return posts;
 };
+
+/**
+ *
+ * @param {req.params.post_id} id
+ */
+const getSinglePost = async (id) => {
+  const post = await Post.findById(id);
+  if (!post) return false;
+  return post;
+};
+
+/**
+ *
+ * @param {req.params.post_id} id
+ */
+const deleteSinglePost = async (userID, postID) => {
+  console.log(postID);
+  const post = await Post.findById(postID);
+
+  if (!post) return false;
+  console.log(post);
+  if (post.user.toString() !== userID) {
+    return res.status(401).send('User Not Authorized');
+  }
+
+  await post.remove();
+};
+
 module.exports.getUserandCreatePost = getUserandCreatePost;
 module.exports.getAllPosts = getAllPosts;
+module.exports.getSinglePost = getSinglePost;
+module.exports.deleteSinglePost = deleteSinglePost;
