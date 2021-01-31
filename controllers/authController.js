@@ -1,21 +1,15 @@
-/**
- * Login
- */
-// const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 const { loginValidation } = require('../Validations/userValidation');
 const comparePassword = require('../utils/comparePassword');
 const { emailExists } = require('../utils/emailExist');
+const { getCurrentUser } = require('../services/authServices');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  async getUsers(req, res) {
+  async getUser(req, res) {
     try {
-      // console.log('__________ in here _____________', req.user.id, req.user);
-      const user = await User.findById(req.user.id).select('-password');
-      // console.log('______________', user, '____________');
-      res.json(user);
+      const users = await getCurrentUser(req.user.id); //Calling GetAllUser Service for getting All users
+      res.json(users);
     } catch (err) {
       console.error(err.message);
       res.status('500').send('Server Error');
