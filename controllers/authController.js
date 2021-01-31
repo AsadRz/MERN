@@ -1,9 +1,6 @@
 const { loginValidation } = require('../Validations/userValidation');
-const comparePassword = require('../utils/comparePassword');
-const { emailExists } = require('../utils/emailExist');
-const { getCurrentUser } = require('../services/authServices');
-const config = require('config');
-const jwt = require('jsonwebtoken');
+
+const { getCurrentUser, login } = require('../services/authServices');
 
 module.exports = {
   async getUser(req, res) {
@@ -21,32 +18,15 @@ module.exports = {
      * Validate User before forwarding
      */
 
+    const { email, password } = req.body;
     const { error } = loginValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    // Checking if Email already exists
-    const user = await emailExists(req.body.email);
-    if (user === false)
-      return res.status(400).send('Incorrect Email or Password');
+    // Call login Service
+    const data = await login(email, password);
+    if (data.msg) return res.status(400).send(data.msg);
 
-    // Checking if password is correct
-    const checkPassword = await comparePassword(req.body.password, user);
-
-    if (!checkPassword)
-      return res.status(400).send('Invalid Email or Password');
-
-    /**
-     * Authenticating User & Assigning Token
-     */
-
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-    const token = jwt.sign(payload, config.get('jwtToken'), {
-      expiresIn: '2h',
-    });
-    res.header('auth-token', token).send(token);
+    const { token, success, payload } = data;
+    res.header('auth-token', token).send({ token, success, payload });
   },
 };

@@ -1,6 +1,6 @@
 const { userValidation } = require('../Validations/userValidation');
 const gravatar = require('gravatar');
-const { emailExists } = require('../utils/emailExist');
+const UserRepo = require('../repos/userRepo');
 const { passwordHashing, registerUser } = require('../services/userServices');
 const config = require('config');
 const jwt = require('jsonwebtoken');
@@ -17,8 +17,8 @@ module.exports = {
       if (error) return res.status(400).send(error.details[0].message);
 
       // Checking if Email already exists
-      const checkEmail = await emailExists(email);
-      if (checkEmail) return res.status(400).send('Email Already Exists');
+      const emailExists = await UserRepo.findByEmail(email);
+      if (emailExists) return res.status(400).send('Email Already Exists');
 
       const avatar = gravatar.url(email, {
         s: '200',
@@ -33,9 +33,9 @@ module.exports = {
        * Creating new User
        */
       const data = {
-        name: name,
-        email: email,
-        hashedPassword: hashedPassword,
+        name,
+        email,
+        hashedPassword,
         avatar,
       };
       const user = await registerUser(data);
