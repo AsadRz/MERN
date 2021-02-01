@@ -86,54 +86,40 @@ const getUserProfile = async (id) => {
 };
 
 const deleteDetails = async (id) => {
-  /**
-   * @todo remove user posts
-   */
-  /**
-   * @todo remove profile
-   */
-
-  await Profile.findOneAndRemove({ user: id });
-  /**
-   * @todo remove user posts
-   */
-  await User.findOneAndRemove({ _id: id });
+  ProfileRepo.deleteProfileById(id);
 };
 
-const addUserExperience = async (data, id) => {
-  try {
-    const profile = await Profile.findOne({ user: id });
-    profile.experience.unshift(data);
-    await profile.save();
-    return profile;
-  } catch (error) {
-    console.error(error.message);
-    return false;
-  }
+const addUserExperience = async (id, body) => {
+  const profile = await ProfileRepo.getProfileById(id);
+  const { title, company, location, from, to, current, description } = body;
+
+  const newExp = {
+    title,
+    company,
+    location,
+    from,
+    to,
+    current,
+    description,
+  };
+
+  profile.experience.unshift(newExp);
+  return await ProfileRepo.addExperience(profile);
 };
 
 const deleteUserExperience = async (id, expId) => {
-  try {
-    console.log(id);
-    const profile = await Profile.findOne({ user: id });
-    //Get Remove Index
+  const profile = await ProfileRepo.getProfileById(id);
+  //Get Remove Index
 
-    if (!profile) {
-      return false;
-    }
-
-    // console.log('----------- Profile ----------', profile.experience);
+  if (profile) {
     const removedIndex = profile.experience
       .map((item) => item.id)
       .indexOf(expId);
     // console.log('----------- Removed Index ----------', removedIndex);
 
     profile.experience.splice(removedIndex, 1);
-    await profile.save();
-    return profile;
-  } catch (error) {
-    console.error(error.message);
-    return false;
+
+    return await ProfileRepo.deleteExperience(profile);
   }
 };
 

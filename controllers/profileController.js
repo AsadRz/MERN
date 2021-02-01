@@ -37,6 +37,7 @@ module.exports = {
       const { error } = profileValidation(req.body);
 
       if (error) return res.status(400).send(error.details[0].message);
+
       const profile = await createOrUpdateProfile(req.user.id, req.body);
       if (!profile) {
         return res.status(400).send('No Profile associated with this user');
@@ -91,47 +92,27 @@ module.exports = {
 
     if (error) return res.status(400).send(error.details[0].message);
 
-    const {
-      title,
-      company,
-      location,
-      from,
-      to,
-      current,
-      description,
-    } = req.body;
-
-    const newExp = {
-      title,
-      company,
-      location,
-      from,
-      to,
-      current,
-      description,
-    };
-
     try {
-      const profile = await addUserExperience(newExp, req.user.id);
+      const profile = await addUserExperience(req.user.id, req.body);
       if (!profile) return res.status(400).send('Profile not found');
 
-      return res.send(profile);
+      res.json({ profile });
     } catch (err) {
       console.error(err.message);
-      res.status(400).send('Internal Server Error');
+      res.status(500).send('Internal Server Error');
     }
   },
   async deleteExperience(req, res) {
     try {
       const profile = await deleteUserExperience(
-        req.user._id,
+        req.user.id,
         req.params.exp_id
       );
       if (!profile) res.status(400).send('Profile Not Found');
       res.send(profile);
     } catch (error) {
       console.error(error.message);
-      res.status(400).send('Internal Server Error');
+      res.status(500).send('Internal Server Error');
     }
   },
 

@@ -63,9 +63,35 @@ const FetchingProfileById = async (id) => {
   ]);
 };
 
+const deleteProfileById = async (id) => {
+  /**
+   * @todo remove user posts
+   */
+  /**
+   * @todo remove profile
+   */
+
+  await Profile.findOneAndRemove({ user: id });
+  /**
+   * @todo remove user posts
+   */
+  await User.findOneAndRemove({ _id: id });
+};
+
+const addExperience = async (profile) => {
+  return await profile.save();
+};
+
+const deleteExperience = async (profile) => {
+  return await profile.save();
+};
+
 module.exports.getProfileById = getProfileById;
 module.exports.getUserById = getUserById;
 module.exports.updateExistingProfile = updateExistingProfile;
 module.exports.createUserProfile = createUserProfile;
 module.exports.findAllProfiles = findAllProfiles;
 module.exports.FetchingProfileById = FetchingProfileById;
+module.exports.deleteProfileById = deleteProfileById;
+module.exports.addExperience = addExperience;
+module.exports.deleteExperience = deleteExperience;
