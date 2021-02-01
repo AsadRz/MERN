@@ -1,7 +1,7 @@
 const Post = require('../models/Post');
 const Profile = require('../models/Profile');
 const User = require('../models/User');
-
+const PostRepo = require('../repos/postRepo');
 /**
  * @desc get User for token
  * @param {req.user.id} id
@@ -9,7 +9,7 @@ const User = require('../models/User');
  */
 
 const getUserandCreatePost = async (id, text) => {
-  const user = await User.findById(id).select('-password');
+  const user = await PostRepo.getUserById(id);
 
   const newPost = new Post({
     text,
@@ -18,17 +18,11 @@ const getUserandCreatePost = async (id, text) => {
     user: id,
   });
 
-  const post = await newPost.save();
-  if (!post) {
-    return false;
-  }
-  return post;
+  return await PostRepo.savePost(newPost);
 };
 
 const getAllPosts = async () => {
-  const posts = await Post.find().sort({ date: -1 });
-  if (!posts) return false;
-  return posts;
+  return await PostRepo.findAllPosts();
 };
 
 /**
@@ -36,9 +30,7 @@ const getAllPosts = async () => {
  * @param {req.params.post_id} id
  */
 const getSinglePost = async (id) => {
-  const post = await Post.findById(id);
-  if (!post) return false;
-  return post;
+  return await PostRepo.getPostById(id);
 };
 
 /**
@@ -46,11 +38,7 @@ const getSinglePost = async (id) => {
  * @param {req.params.post_id} id
  */
 const deleteSinglePost = async (userID, postID) => {
-  console.log(postID);
   const post = await Post.findById(postID);
-
-  if (!post) return false;
-  console.log(post);
   if (post.user.toString() !== userID) {
     return res.status(401).send('User Not Authorized');
   }
