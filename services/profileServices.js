@@ -1,5 +1,6 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const ProfileRepo = require('../repos/ProfileRepo');
 
 /**
  * @desc Getting Current User Profile After verifying the token and populating name and avatar from user model
@@ -7,50 +8,66 @@ const User = require('../models/User');
  */
 
 const getCurrentProfile = async (id) => {
-  try {
-    const profile = await Profile.findOne({ user: id }).populate('user', [
-      'name',
-      'avatar',
-    ]);
-
-    if (!profile) {
-      return false;
-    }
-    return profile;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
+  const profile = await ProfileRepo.getProfileById(id);
+  return profile;
 };
 
 /**
  * @desc Creating or Updating User Profile
- * @param {*req.user.id} data = profileFields
+ * @param {*req.user.id} body = profileFields
  */
 
-const createOrUpdateProfile = async (data) => {
-  try {
-    let profile = await Profile.findOne({ user: data.user });
+const createOrUpdateProfile = async (id, body) => {
+  const {
+    company,
+    website,
+    location,
+    bio,
+    status,
+    githubusername,
+    skills,
+    youtube,
+    linkedin,
+    facebook,
+    twitter,
+    instagram,
+  } = body;
 
-    if (profile) {
-      //if Profile is already there then Update Profile
-
-      profile = await Profile.findOneAndUpdate(
-        { user: data.user },
-        { $set: data },
-        { new: true }
-      );
-      return profile;
-    }
-
-    //Create
-    profile = new Profile(data);
-    await profile.save();
-    return profile;
-  } catch (err) {
-    console.error(err);
-    return false;
+  //Build Project Object
+  const profileFields = {};
+  profileFields.user = id;
+  if (company) profileFields.company = company;
+  if (website) profileFields.website = website;
+  if (location) profileFields.location = location;
+  if (bio) profileFields.bio = bio;
+  if (status) profileFields.status = status;
+  if (githubusername) profileFields.githubusername = githubusername;
+  if (skills) {
+    profileFields.skills = skills.split(',').map((skill) => skill.trim());
   }
+
+  profileFields.social = {};
+  if (twitter) profileFields.social.twitter = twitter;
+  if (youtube) profileFields.social.youtube = youtube;
+  if (facebook) profileFields.social.facebook = facebook;
+  if (instagram) profileFields.social.instagram = instagram;
+  if (linkedin) profileFields.social.linkedin = linkedin;
+
+  //Checking if we have already Created User Profile
+  let profile = await ProfileRepo.getUserById(id);
+
+  if (profile) {
+    //if Profile is already there then Update Profile
+
+    profile = await ProfileRepo.updateExistingProfile(
+      ({ user: id }, { $set: profileFields }, { new: true })
+    );
+    return profile;
+  }
+
+  //Create
+  profile = ProfileRepo.createUserProfile(profileFields);
+  return profile;
 };
 
 /**
