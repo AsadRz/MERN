@@ -1,31 +1,56 @@
 const bcrypt = require('bcryptjs'); //Password Hashing
-const User = require('../models/User');
+const UserRepo = require('../repos/userRepo');
+const config = require('config');
+const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
 
-const passwordHashing = async (data) => {
-  const salt = await bcrypt.genSaltSync(10);
-  const hashedPassword = await bcrypt.hash(data, salt);
-  return hashedPassword;
-};
+const signup = async (name, email, password) => {
+  // Checking if Email already exists
+  const emailExists = await UserRepo.findByEmail(email);
+  if (emailExists) return { msg: 'Email Already Exists' };
 
-const registerUser = async (data) => {
-  const user = new User({
-    name: data.name,
-    email: data.email,
-    password: data.hashedPassword,
-    avatar: data.avatar,
+  const avatar = gravatar.url(email, {
+    s: '200',
+    r: 'pg',
+    d: 'retro',
   });
-  try {
-    await user.save();
 
-    const data = {
-      status: 200,
-      id: user._id,
+  // Hashing the Password
+  const salt = await bcrypt.genSaltSync(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  /**
+   * Creating new User
+   */
+  const newUserData = {
+    name,
+    email,
+    hashedPassword,
+    avatar,
+  };
+
+  const user = await UserRepo.saveUser(newUserData);
+
+  if (user) {
+    const payload = {
+      user: {
+        id: user.id,
+        status: user.status,
+      },
     };
-    return data;
-  } catch (err) {
-    return err;
+    let token = '';
+    jwt.sign(
+      payload,
+      config.get('jwtToken'),
+      { expiresIn: 360000 },
+      (err, token) => {
+        if (err) throw err;
+        token = token;
+      }
+    );
+    const responseData = { token, payload };
+    return responseData;
   }
 };
 
-module.exports.passwordHashing = passwordHashing;
-module.exports.registerUser = registerUser;
+module.exports.signup = signup;

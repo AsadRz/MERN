@@ -14,19 +14,24 @@ module.exports = {
   },
 
   async authenticateUser(req, res) {
-    /**
-     * Validate User before forwarding
-     */
+    try {
+      /**
+       * Validate User before forwarding
+       */
 
-    const { email, password } = req.body;
-    const { error } = loginValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+      const { email, password } = req.body;
+      const { error } = loginValidation(req.body);
+      if (error) return res.status(400).send(error.details[0].message);
 
-    // Call login Service
-    const data = await login(email, password);
-    if (data.msg) return res.status(400).send(data.msg);
+      // Call login Service
+      const data = await login(email, password);
+      if (data.msg) return res.status(400).send(data.msg);
 
-    const { token, success, payload } = data;
-    res.header('auth-token', token).send({ token, success, payload });
+      const { token, success, payload } = data;
+      res.header('auth-token', token).send({ token, success, payload });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+    }
   },
 };
