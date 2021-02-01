@@ -123,39 +123,37 @@ const deleteUserExperience = async (id, expId) => {
   }
 };
 
-const addUserEducation = async (data, id) => {
-  try {
-    const profile = await Profile.findOne({ user: id });
-    profile.education.unshift(data);
-    await profile.save();
-    return profile;
-  } catch (error) {
-    console.error(error.message);
-    return false;
-  }
+const addUserEducation = async (id, body) => {
+  const profile = await Profile.findOne({ user: id });
+  const { school, degree, fieldofstudy, from, to, current, description } = body;
+
+  const newEdu = {
+    school,
+    degree,
+    fieldofstudy,
+    from,
+    to,
+    current,
+    description,
+  };
+
+  profile.education.unshift(newEdu);
+  return await ProfileRepo.addEducation(profile);
 };
 
 const deleteUserEducation = async (id, eduId) => {
-  try {
-    const profile = await Profile.findOne({ user: id });
-    //Get Remove Index
+  const profile = await ProfileRepo.getProfileById(id);
+  //Get Remove Index
 
-    if (!profile) {
-      return false;
-    }
-
-    // console.log('----------- Profile ----------', profile.experience);
+  if (profile) {
     const removedIndex = profile.education
       .map((item) => item.id)
       .indexOf(eduId);
     // console.log('----------- Removed Index ----------', removedIndex);
 
     profile.education.splice(removedIndex, 1);
-    await profile.save();
-    return profile;
-  } catch (error) {
-    console.error(error.message);
-    return false;
+
+    return await ProfileRepo.deleteEducation(profile);
   }
 };
 

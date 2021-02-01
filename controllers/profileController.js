@@ -117,54 +117,31 @@ module.exports = {
   },
 
   async addEducation(req, res) {
-    /**
-     * Validate Profile before Submitting
-     */
-    const { error } = educationValidation(req.body);
-
-    if (error) return res.status(400).send(error.details[0].message);
-
-    const {
-      school,
-      degree,
-      fieldofstudy,
-      from,
-      to,
-      current,
-      description,
-    } = req.body;
-
-    const newEdu = {
-      school,
-      degree,
-      fieldofstudy,
-      from,
-      to,
-      current,
-      description,
-    };
-
     try {
-      const profile = await addUserEducation(newEdu, req.user.id);
+      /**
+       * Validate Profile before Submitting
+       */
+      const { error } = educationValidation(req.body);
+
+      if (error) return res.status(400).send(error.details[0].message);
+
+      const profile = await addUserEducation(req.user.id, req.body);
       if (!profile) return res.status(400).send('Profile not found');
 
-      return res.send(profile);
+      res.json({ profile });
     } catch (err) {
       console.error(err.message);
-      res.status(400).send('Internal Server Error');
+      res.status(500).send('Internal Server Error');
     }
   },
   async deleteEducation(req, res) {
     try {
-      const profile = await deleteUserEducation(
-        req.user._id,
-        req.params.edu_id
-      );
+      const profile = await deleteUserEducation(req.user.id, req.params.edu_id);
       if (!profile) res.status(400).send('Profile Not Found');
       res.send(profile);
     } catch (error) {
       console.error(error.message);
-      res.status(400).send('Internal Server Error');
+      res.status(500).send('Internal Server Error');
     }
   },
 };

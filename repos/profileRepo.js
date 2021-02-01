@@ -86,6 +86,14 @@ const deleteExperience = async (profile) => {
   return await profile.save();
 };
 
+const addEducation = async (profile) => {
+  return await profile.save();
+};
+
+const deleteEducation = async (profile) => {
+  return await profile.save();
+};
+
 module.exports.getProfileById = getProfileById;
 module.exports.getUserById = getUserById;
 module.exports.updateExistingProfile = updateExistingProfile;
@@ -95,3 +103,5 @@ module.exports.FetchingProfileById = FetchingProfileById;
 module.exports.deleteProfileById = deleteProfileById;
 module.exports.addExperience = addExperience;
 module.exports.deleteExperience = deleteExperience;
+module.exports.addEducation = addEducation;
+module.exports.deleteEducation = deleteEducation;
