@@ -49,9 +49,14 @@ module.exports = {
   },
 
   async getProfiles(req, res) {
-    const profiles = await getUserProfiles();
-    if (!profiles) res.status(400).send('Profiles not found');
-    res.json(profiles);
+    try {
+      const profiles = await getUserProfiles();
+      if (!profiles) res.status(400).send('Profiles not found');
+      res.json(profiles);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+    }
   },
 
   async getCurrentUserProfile(req, res) {

@@ -45,7 +45,27 @@ const createUserProfile = async (data) => {
   return await profile.save();
 };
 
+/**
+ * @description Fetching All Profiles
+ */
+const findAllProfiles = async () => {
+  return await Profile.find().populate('user', ['name', 'avatar']);
+};
+
+/**
+ * @description Fetching All Profiles By ID
+ * @id req.params.user_id
+ */
+const FetchingProfileById = async (id) => {
+  return await Profile.findOne({ user: id }).populate('user', [
+    'name',
+    'avatar',
+  ]);
+};
+
 module.exports.getProfileById = getProfileById;
 module.exports.getUserById = getUserById;
 module.exports.updateExistingProfile = updateExistingProfile;
 module.exports.createUserProfile = createUserProfile;
+module.exports.findAllProfiles = findAllProfiles;
+module.exports.FetchingProfileById = FetchingProfileById;

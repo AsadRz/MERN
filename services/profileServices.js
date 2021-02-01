@@ -8,8 +8,7 @@ const ProfileRepo = require('../repos/ProfileRepo');
  */
 
 const getCurrentProfile = async (id) => {
-  const profile = await ProfileRepo.getProfileById(id);
-  return profile;
+  return await ProfileRepo.getProfileById(id);
 };
 
 /**
@@ -75,9 +74,7 @@ const createOrUpdateProfile = async (id, body) => {
  */
 
 const getUserProfiles = async () => {
-  const profiles = await Profile.find().populate('user', ['name', 'avatar']);
-  if (!profiles) return false;
-  return profiles;
+  return await ProfileRepo.findAllProfiles();
 };
 
 /**
@@ -85,16 +82,7 @@ const getUserProfiles = async () => {
  */
 
 const getUserProfile = async (id) => {
-  const profile = await Profile.findOne({ user: id }).populate('user', [
-    'name',
-    'avatar',
-  ]);
-
-  if (!profile) return false;
-  return profile;
-
-  console.error(error.message);
-  return false;
+  return await ProfileRepo.FetchingProfileById(id);
 };
 
 const deleteDetails = async (id) => {
