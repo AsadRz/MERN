@@ -34,4 +34,12 @@ postRouter.get('/:post_id', auth, postController.getPost);
 
 postRouter.delete('/:post_id', auth, postController.deletePost);
 
+/**
+ * @route PUT /api/posts/like/:id
+ * @desc  PUT like a post
+ * @access Private
+ */
+
+postRouter.put('/like/:id', auth, postController.addLikeToPost);
+
 module.exports = postRouter;

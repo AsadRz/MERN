@@ -20,10 +20,15 @@ const findAllPosts = async () => {
 };
 
 const getPostById = async (id) => {
-  return await Post.findById(id);
+  const user = await Post.findById(id);
+  return user;
 };
 
+const addLike = async (post) => {
+  return await post.save();
+};
 module.exports.getUserById = getUserById;
 module.exports.savePost = savePost;
 module.exports.findAllPosts = findAllPosts;
 module.exports.getPostById = getPostById;
+module.exports.addLike = addLike;
