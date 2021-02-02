@@ -4,6 +4,7 @@ const {
   getSinglePost,
   deleteSinglePost,
   addingLikeToPostByID,
+  unLikingPostById,
 } = require('../services/postsServices');
 const { postValidation } = require('../Validations/postValidation');
 
@@ -89,6 +90,17 @@ module.exports = {
   async addLikeToPost(req, res) {
     try {
       const post = await addingLikeToPostByID(req.user.id, req.params.id);
+      if (post?.msg) return res.status(400).send(post.msg);
+      res.json(post.likes);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  async deleteLikeToPost(req, res) {
+    try {
+      const post = await unLikingPostById(req.user.id, req.params.id);
       if (post?.msg) return res.status(400).send(post.msg);
       res.json(post.likes);
     } catch (error) {

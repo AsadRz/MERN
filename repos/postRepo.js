@@ -26,8 +26,14 @@ const getPostById = async (id) => {
 const addLike = async (post) => {
   return await post.save();
 };
+
+const unLike = async (post) => {
+  return await post.save();
+};
+
 module.exports.getUserById = getUserById;
 module.exports.savePost = savePost;
 module.exports.findAllPosts = findAllPosts;
 module.exports.getPostById = getPostById;
 module.exports.addLike = addLike;
+module.exports.unLike = unLike;

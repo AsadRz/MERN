@@ -58,8 +58,29 @@ const addingLikeToPostByID = async (userId, id) => {
   //Check if post has already been liked by the same user
 };
 
+const unLikingPostById = async (userId, id) => {
+  const post = await PostRepo.getPostById(id);
+
+  if (
+    post.likes.filter((like) => like.user.toString() === userId).length === 0
+  ) {
+    return { msg: 'Post Has not been liked by the User' };
+  }
+
+  // Get remove Index
+
+  const removeIndex = await post.likes.map((like) =>
+    like.user.toString().indexOf(userId)
+  );
+
+  post.likes.splice(removeIndex, 1);
+  return await PostRepo.unLike(post);
+  //Check if post has already been liked by the same user
+};
+
 module.exports.getUserandCreatePost = getUserandCreatePost;
 module.exports.getAllPosts = getAllPosts;
 module.exports.getSinglePost = getSinglePost;
 module.exports.deleteSinglePost = deleteSinglePost;
 module.exports.addingLikeToPostByID = addingLikeToPostByID;
+module.exports.unLikingPostById = unLikingPostById;
