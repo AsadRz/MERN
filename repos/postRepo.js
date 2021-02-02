@@ -20,8 +20,7 @@ const findAllPosts = async () => {
 };
 
 const getPostById = async (id) => {
-  const user = await Post.findById(id);
-  return user;
+  return await Post.findById(id);
 };
 
 const addLike = async (post) => {
