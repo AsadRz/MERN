@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs'); //Password Hashing
 const UserRepo = require('../repos/userRepo');
-const config = require('config');
-const jwt = require('jsonwebtoken');
+
 const gravatar = require('gravatar');
 
 const signup = async (name, email, password) => {
@@ -38,18 +37,7 @@ const signup = async (name, email, password) => {
         status: user.status,
       },
     };
-    let token = '';
-    jwt.sign(
-      payload,
-      config.get('jwtToken'),
-      { expiresIn: 360000 },
-      (err, token) => {
-        if (err) throw err;
-        token = token;
-      }
-    );
-    const responseData = { token, payload };
-    return responseData;
+    return payload;
   }
 };
 
