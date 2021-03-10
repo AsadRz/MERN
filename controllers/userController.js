@@ -23,7 +23,7 @@ module.exports = {
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
-          const responseData = { token, payload };
+          const responseData = { token };
           res.json({ responseData });
         }
       );
